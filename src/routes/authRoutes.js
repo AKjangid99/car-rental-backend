@@ -1,7 +1,7 @@
 const express = require("express");
 const { signup, login } = require("../controllers/authController");
 const { routes } = require("../app");
-const { ownerSignup } = require('../controllers/ownerController')
+const { ownersignup, ownerlogin } = require('../controllers/owner')
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ const router = express.Router();
 router.post("/user/signup", signup);
 router.post("/user/login", login);
 
-routes.post("/onwner/signup", ownerSignup)
-routes.post("/onwner/login",)
+router.post("/owner/signup", ownersignup)
+router.post("/owner/login", ownerlogin)
 
 module.exports = router; 

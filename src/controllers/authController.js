@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const { createUser, findUserByUsername } = require("../models/userModel");
+const { createUser, findUserByEmail } = require("../models/userModel");
 
 const JWT_SECRET = process.env.JWT_SECRET || "secretkey";
 
@@ -36,15 +36,15 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-        const { username, password } = req.body;
-        if (!username || !password) {
+        const { email, password } = req.body;
+        if (!email || !password) {
             return res.status(400).json({
                 success: false,
                 error: "invalid inputs"
             });
         }
 
-        const user = await findUserByUsername(username);
+        const user = await findUserByEmail(email);
 
         if (!user) {
             return res.status(401).json({
@@ -52,7 +52,7 @@ const login = async (req, res) => {
                 error: "user does not exist"
             });
         }
-        const passwordMatch = await bcrypt.compare(password, user.password);
+        const passwordMatch = await bcrypt.compare(password, user.password_hash);
         if (!passwordMatch) {
             return res.status(401).json({
                 success: false,

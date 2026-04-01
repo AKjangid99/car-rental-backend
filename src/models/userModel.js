@@ -1,12 +1,12 @@
 const pool = require("../config/db");
 
-const findUserByUsername = async (username) => {
+const findUserByEmail = async (email) => {
   const query = `
-      SELECT id, username, password
+      SELECT id , email , password_hash
       FROM users
-      WHERE username = $1
+      WHERE email = $1
     `;
-  const result = await pool.query(query, [username]);
+  const result = await pool.query(query, [email]);
   return result.rows[0];
 };
 
@@ -21,6 +21,6 @@ const createUser = async (name, password_hash, email, phone) => {
 };
 
 module.exports = {
-  findUserByUsername,
+  findUserByEmail,
   createUser
 };
