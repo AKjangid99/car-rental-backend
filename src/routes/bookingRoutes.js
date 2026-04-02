@@ -1,5 +1,5 @@
 const express = require("express");
-const authMiddleware = require("../middleware/authMiddleware");
+const { userAuthMiddleware } = require("../middleware/authMiddleware");
 
 const {
     createBooking,
@@ -9,8 +9,9 @@ const {
 } = require("../controllers/bookingController");
 
 const router = express.Router();
+exports.router = router;
 
-router.use(authMiddleware);
+router.use(userAuthMiddleware);
 router.post("/", createBooking);
 router.get("/", getBookings);
 router.put("/:bookingId", updateBooking);
