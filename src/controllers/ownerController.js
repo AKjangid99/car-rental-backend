@@ -85,7 +85,7 @@ const ownerlogin = async (req, res) => {
 
         res.status(500).json({
             success: false,
-            message: "internal sarver error "
+            message: "internal sarver error"
         })
     }
 }

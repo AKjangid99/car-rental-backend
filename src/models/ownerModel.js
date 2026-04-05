@@ -22,9 +22,7 @@ const getOwnerDetailsByEmail = async (email) => {
         SELECT id, name, password_hash 
         FROM car_owners 
         WHERE email = $1`
-        console.log("1.2")
         const result = await pool.query(query, [email])
-        console.log("1.3")
         return result.rows[0]
     } catch (e) {
 

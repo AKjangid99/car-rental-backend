@@ -9,7 +9,6 @@ const {
 } = require("../controllers/bookingController");
 
 const router = express.Router();
-exports.router = router;
 
 router.use(userAuthMiddleware);
 router.post("/", createBooking);
