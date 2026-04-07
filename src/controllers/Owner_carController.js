@@ -1,7 +1,8 @@
 const {
     getcardetails,
     createNewCarEntry,
-    getcardetailsbyId
+    getcardetailsbyId,
+    deleteCar
 
 } = require('../models/carsModal')
 
@@ -90,4 +91,33 @@ const updateCarDetails = async (req, res) => {
     })
 }
 
-module.exports = { getOwnerCars, addNewCar, updateCarDetails }
+const removecar = (req, res) => {
+
+    try {
+        const carid = req.params.carid
+
+        if (!carid) {
+            res.status(400).json({
+                success: false,
+                message: "Bad Request"
+            })
+        }
+
+        const result = deleteCar(carid)
+
+        console.log(result)
+
+        res.res(200).json({
+            success: true,
+            message: "Deleted successffully"
+        })
+    } catch (e) {
+        res.status(500).json({
+            success: false,
+            message: "Internal server error"
+        })
+    }
+
+}
+
+module.exports = { getOwnerCars, addNewCar, updateCarDetails, removecar }

@@ -38,4 +38,11 @@ const UpdateDetails = async (cardetails) => {
     return result.rows[0];
 }
 
-module.exports = { getcardetails, createNewCarEntry, getcardetailsbyId }
+const deleteCar = async (carid) => {
+    const query = ` DETELE FROM cars WHERE id = $1`
+
+    const result = await pool.query(query, [carid]);
+    return result
+}
+
+module.exports = { getcardetails, createNewCarEntry, getcardetailsbyId, deleteCar }
