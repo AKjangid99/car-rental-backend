@@ -7,9 +7,11 @@ const {
 } = require('../models/carsModal')
 
 const getOwnerCars = async (req, res) => {
-
     try {
-        const { OwnerId, ownerName } = req.body
+
+        console.log(" dfhk")
+
+        const OwnerId = req.params.ownerId
 
         const carlist = await getcardetails(OwnerId)
 
@@ -31,16 +33,19 @@ const getOwnerCars = async (req, res) => {
 const addNewCar = async (req, res) => {
     try {
 
-        const { company, modal, car_number, OwnerId } = req.body
-        if (!company || !modal || car_number || OwnerId) {
-            res.status(400).json({
+        const { carName, mileage, seats, rentPerDay, location, airbags, isActive } = req.body
+
+        const ownerId = req.params.ownerId
+
+        console.log(carName, mileage, seats, rentPerDay, location, airbags, isActive, ownerId)
+
+        if (!carName || !mileage || !seats || !rentPerDay || !location || !airbags || !isActive || !ownerId) {
+            return res.status(400).json({
                 success: false,
                 message: "Bad Request"
             })
         }
-
-        const cardetails = await createNewCarEntry(company, modal, car_number, OwnerId)
-
+        const cardetails = await createNewCarEntry(carName, mileage, seats, rentPerDay, location, airbags, isActive, ownerId)
         res.status(200).json({
             success: true,
             cardetails: cardetails

@@ -9,6 +9,8 @@ const router = express.Router();
 router.post("/user/signup", signup);
 router.post("/user/login", login);
 
+
+
 router.post("/owner/signup", ownersignup)
 router.post("/owner/login", ownerlogin)
 

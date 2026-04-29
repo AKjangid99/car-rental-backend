@@ -4,16 +4,18 @@ const getcardetails = async (id) => {
     const query = ` SELECT * FROM cars where owner_id = $1`
 
     const result = await pool.query(query, [id])
-    return result.rows[0]
+    return result.rows
 }
 
-const createNewCarEntry = async (company, modal, car_number, owner_id, isbooked = "False") => {
+const createNewCarEntry = async (carName, mileage, seats, rentPerDay, location, airbags, isActive, OwnerId) => {
 
-    const query = `INSERT INTO cars (company, modal, car_number, owner_id, isbooked )
-    VALUES ( $1, $2, $3, $4, $5 ) 
-    RETURNING *`
+    const query = `INSERT INTO cars (owner_id , location , mileage, num_seats, rent, air_bags, carname, status)
+        VALUES ( $1, $2, $3, $4, $5, $6, $7, $8 ) 
+        RETURNING *`
 
-    const result = await pool.query(query, [company, modal, car_number, owner_id, isbooked])
+    console.log("call start")
+    const result = await pool.query(query, [OwnerId, location, mileage, seats, rentPerDay, airbags, carName, isActive])
+    console.log(" call end  ")
     return result.rows[0]
 
 }

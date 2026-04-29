@@ -20,12 +20,14 @@ const userAuthMiddleware = (req, res, next) => {
             });
         }
         const token = parts[1];
-        const decoded = jwt.verify(token, JWT_SECRET);
-
-        req.user = {
-            userId: decoded.userId,
-            username: decoded.username
-        };
+        const verifyed = jwt.verify(token, JWT_SECRET);
+        const decode = jwt.decode(token)
+        if (verifyed) {
+            req.user = {
+                userId: decoded.userId,
+                username: decoded.username
+            };
+        }
         next();
     } catch (err) {
         return res.status(401).json({
@@ -38,12 +40,20 @@ const userAuthMiddleware = (req, res, next) => {
 const ownerAuthMiddleware = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization
+
+
+        console.log("1 =====================>")
+
+
         if (!authHeader) {
             return res.status(401).json({
                 success: false,
                 error: "Authorization header missing"
             })
         }
+
+        console.log("ghdgd =====================>")
+
 
         const parts = authHeader.split(" ");
         if (parts.length !== 2 || parts[0] !== "Bearer") {
@@ -55,12 +65,15 @@ const ownerAuthMiddleware = (req, res, next) => {
 
         const token = parts[1]
         const verifyed = jwt.verify(token, OwnerSecreat)
+        const decoded = jwt.decode(token)
+        console.log("versifdsf")
 
-        if (verify) {
-            req.owner = {
-                userId: decoded.userId,
-                username: decoded.username
-            };
+        if (verifyed) {
+            console.log(" ========================>", decoded)
+
+            req.params.ownerId = decoded.user_Id,
+
+                console.log("next ")
             next();
         } else {
             return res.status(401).json({
@@ -70,7 +83,7 @@ const ownerAuthMiddleware = (req, res, next) => {
         }
 
     } catch (e) {
-
+        console.log(e)
     }
 }
 

@@ -19,10 +19,12 @@ const signup = async (req, res) => {
         const user = await createUser(name, hashedPassword, email, phone);
 
         return res.status(201).json({
+            message: "User created successfully",
             success: true,
             data: {
-                message: "User created successfully",
-                userId: user.id
+                role: "user",
+                userId: user.id,
+                username: user.name
             }
         });
 
@@ -61,15 +63,18 @@ const login = async (req, res) => {
         }
         const token = jwt.sign(
             {
+                role: "user",
                 userId: user.id,
-                username: user.username
+                username: user.name
             },
             JWT_SECRET
         );
         return res.status(200).json({
             success: true,
+            message: "Login successful",
             data: {
-                message: "Login successful",
+                username: user.name,
+                role: "user",
                 token
             }
         });

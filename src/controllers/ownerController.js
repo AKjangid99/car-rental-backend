@@ -5,24 +5,27 @@ const ownerJWT = process.env.Owner_secret
 
 const ownersignup = async (req, res) => {
     try {
-
-        const { ownerName, password, phone, email } = req.body
-        if (!ownerName || !password || !phone || !email) {
+        console.log(" starting rgjrogf  ")
+        const { name, password, phone, email } = req.body
+        if (!name || !password || !phone || !email) {
             return res.status(400).json({
                 success: false,
                 error: "invalid inputs"
             })
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10)
-        const owner = await createOwner(ownerName, hashedPassword, email, phone)
 
-        console.log(owner)
+        const hashedPassword = await bcrypt.hash(password, 10)
+
+        const owner = await createOwner(name, hashedPassword, email, phone)
+
+
 
         return res.status(201).json({
             success: true,
+            message: "User created successfully",
             data: {
-                message: "User created successfully",
+                role: "owner",
                 ownerId: owner.id,
                 ownerName: owner.name
             }
@@ -52,15 +55,11 @@ const ownerlogin = async (req, res) => {
                 message: "email or password misiing"
             })
         }
-        console.log("1")
+
         const userdetails = await getOwnerDetailsByEmail(email)
 
-        console.log(" >>>>>>>>>>>>>>>>>>  ", userdetails)
-
-        console.log("2")
         const passwordMatch = await bcrypt.compare(password, userdetails.password_hash)
-        console.log(passwordMatch)
-        console.log("3")
+
         if (passwordMatch) {
             return res.status(401).json({
                 success: false,
@@ -68,16 +67,17 @@ const ownerlogin = async (req, res) => {
             })
         }
 
-        console.log("4")
         const Token = jwt.sign({
-            user_Id: userdetails.name,
+            user_Id: userdetails.id,
             name: userdetails.name
         }, ownerJWT)
 
         res.status(200).json({
             success: true,
+            message: "login successfully",
             data: {
-                message: "login successfully",
+                username: userdetails.name,
+                role: "owner",
                 Token
             }
         })

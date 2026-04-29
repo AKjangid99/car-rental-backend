@@ -5,14 +5,16 @@ const {
     createBooking,
     getBookings,
     updateBooking,
-    deleteBooking
+    deleteBooking,
+    getcars
 } = require("../controllers/bookingController");
 
 const router = express.Router();
 
-router.use(userAuthMiddleware);
+// router.use(userAuthMiddleware);
 router.post("/", createBooking);
-router.get("/", getBookings);
+router.get("/carlist/:location", getcars);
+// router.get("/", getBookings);
 router.put("/:bookingId", updateBooking);
 router.delete("/:bookingId", deleteBooking);
 

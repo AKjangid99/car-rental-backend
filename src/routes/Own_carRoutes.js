@@ -5,16 +5,10 @@ const { getOwnerCars, addNewCar, updateCarDetails, removecar } = require("../con
 const router = express.Router();
 
 
-
-router.use(ownerAuthMiddleware);
-
-
-router.get("/", getOwnerCars)
-router.post("/", addNewCar)
-router.put("/:carid", updateCarDetails)
-router.delete("/:carid", removecar)
-
-
+router.get("/", ownerAuthMiddleware, getOwnerCars)
+router.post("/add", ownerAuthMiddleware, addNewCar)
+router.put("/:carid", ownerAuthMiddleware, updateCarDetails)
+router.delete("/:carid", ownerAuthMiddleware, removecar)
 
 
 module.exports = router;

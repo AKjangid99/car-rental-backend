@@ -4,66 +4,34 @@ const {
     getBookingById,
     updateBookingDB,
     deleteBookingDB,
-    getBookingSummaryByUser
+    getcarlistwithlocation,
+    getcarlist
+
 } = require("../models/bookingModel");
 
 const createBooking = async (req, res) => {
     try {
-        const { carName, days, rentPerDay } = req.body;
-        const userId = req.user.userId;
+        const { carId, userId, start_date, end_date, rentPerDay } = req.body;
+        // const userId = req.user.userId;
 
-        if (!carName || !days || !rentPerDay || days >= 365 || rentPerDay > 2000) {
+        if (!carId || !userId || !user_name || !start_date || !end_date) {
             return res.status(400).json({ success: false, error: "invalid inputs" });
         }
 
-        const status = "booked";
         const totalCost = days * rentPerDay;
+        const booking = await createBookingDB(userId, carId, start_date, end_date, totalCost, rentPerDay);
 
-        const booking = await createBookingDB(userId, carName, days, rentPerDay, status);
+        if (booking == false) {
+            res.status(400).json({ success: false, error: "Car is already booked for these dates." });
+        }
 
         return res.status(201).json({
             success: true,
             data: {
                 message: "Booking created successfully",
                 bookingId: booking.id,
-                totalCost
             }
         });
-
-    } catch (err) {
-        return res.status(500).json({ success: false, error: err.message });
-    }
-};
-
-const getBookings = async (req, res) => {
-    try {
-        const userId = req.user.userId;
-        const { bookingId, summary } = req.query;
-
-        if (summary === "true") {
-            const summaryData = await getBookingSummaryByUser(userId);
-            return res.status(200).json({ success: true, data: summaryData });
-        }
-
-        if (bookingId) {
-            const booking = await getBookingById(userId, bookingId);
-
-            if (!booking) {
-                return res.status(404).json({ success: false, error: "bookingId not found" });
-            }
-
-            booking.totalCost = booking.days * booking.rent_per_day;
-
-            return res.status(200).json({ success: true, data: [booking] });
-        }
-
-        const bookings = await getBookingsByUser(userId);
-        bookings.forEach(b => {
-            b.totalCost = b.days * b.rent_per_day;
-        });
-
-        return res.status(200).json({ success: true, data: bookings });
-
     } catch (err) {
         return res.status(500).json({ success: false, error: err.message });
     }
@@ -129,7 +97,7 @@ const deleteBooking = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            data: { message: "Booking deleted successfully" }
+            message: "Booking deleted successfully"
         });
 
     } catch (err) {
@@ -137,4 +105,21 @@ const deleteBooking = async (req, res) => {
     }
 };
 
-module.exports = { createBooking, getBookings, updateBooking, deleteBooking };
+const getcars = async (req, res) => {
+    const searchTerm = req.params.location ? req.params.location.trim() : null;
+    let carlist
+
+    console.log(searchTerm)
+    if (searchTerm) {
+        carlist = await getcarlistwithlocation(searchTerm)
+    }
+
+
+    res.status(200).json({
+        message: " list retrived",
+        success: "true",
+        data: carlist
+    })
+}
+
+module.exports = { createBooking, updateBooking, deleteBooking, getcars };
